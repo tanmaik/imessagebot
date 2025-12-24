@@ -1,0 +1,23 @@
+# Phone Numbers
+
+Phone Numbers represent the messaging-enabled phone numbers in your organization, supporting iMessage, RCS, and SMS.
+
+Each phone number is associated with a user and can be used to send and receive messages. Messages are automatically sent using the best available protocol (iMessage → RCS → SMS). Phone numbers can have forwarding numbers configured.
+
+## List Phone Numbers
+
+> Retrieves all phone numbers associated with the authenticated partner organization
+
+```json
+{"openapi":"3.0.3","info":{"title":"Linq Partner API","version":"2.0.0"},"tags":[{"name":"Phone Numbers","description":"Phone Numbers represent the messaging-enabled phone numbers in your organization, supporting iMessage, RCS, and SMS.\n\nEach phone number is associated with a user and can be used to send and receive messages. Messages are automatically sent using the best available protocol (iMessage → RCS → SMS). Phone numbers can have forwarding numbers configured.\n"}],"servers":[{"url":"https://api.linqapp.com","description":"Production server"}],"security":[{"ApiKeyAuth":[]}],"components":{"securitySchemes":{"ApiKeyAuth":{"type":"apiKey","in":"header","name":"X-LINQ-INTEGRATION-TOKEN"}},"schemas":{"PhoneNumber":{"type":"object","properties":{"id":{"type":"integer"},"phone_number":{"type":"string"},"forwarding_number":{"type":"string","nullable":true,"description":"Phone number where calls are forwarded when this number is unavailable"},"response_rate":{"type":"integer","description":"Response rate as messages per second"}}}}},"paths":{"/api/partner/v2/phone_numbers":{"get":{"tags":["Phone Numbers"],"summary":"List Phone Numbers","description":"Retrieves all phone numbers associated with the authenticated partner organization","responses":{"200":{"description":"Successful response","content":{"application/json":{"schema":{"type":"object","properties":{"phone_numbers":{"type":"array","items":{"$ref":"#/components/schemas/PhoneNumber"}}}}}}}}}}}}
+```
+
+## Update Phone Number
+
+> Updates the forwarding number for a phone number. The forwarding number is where calls will be forwarded to when the primary number is unavailable.\
+> \
+> Pass an empty string to clear the forwarding number.<br>
+
+```json
+{"openapi":"3.0.3","info":{"title":"Linq Partner API","version":"2.0.0"},"tags":[{"name":"Phone Numbers","description":"Phone Numbers represent the messaging-enabled phone numbers in your organization, supporting iMessage, RCS, and SMS.\n\nEach phone number is associated with a user and can be used to send and receive messages. Messages are automatically sent using the best available protocol (iMessage → RCS → SMS). Phone numbers can have forwarding numbers configured.\n"}],"servers":[{"url":"https://api.linqapp.com","description":"Production server"}],"security":[{"ApiKeyAuth":[]}],"components":{"securitySchemes":{"ApiKeyAuth":{"type":"apiKey","in":"header","name":"X-LINQ-INTEGRATION-TOKEN"}},"schemas":{"PhoneNumber":{"type":"object","properties":{"id":{"type":"integer"},"phone_number":{"type":"string"},"forwarding_number":{"type":"string","nullable":true,"description":"Phone number where calls are forwarded when this number is unavailable"},"response_rate":{"type":"integer","description":"Response rate as messages per second"}}},"Error":{"type":"object","description":"Standard error format used by most endpoints (render_error format)","properties":{"errors":{"type":"array","items":{"type":"object","properties":{"status":{"type":"integer"},"code":{"type":"string"},"title":{"type":"string"},"detail":{"type":"string"}}}}}}}},"paths":{"/api/partner/v2/phone_numbers/{id}":{"put":{"tags":["Phone Numbers"],"summary":"Update Phone Number","description":"Updates the forwarding number for a phone number. The forwarding number is where calls will be forwarded to when the primary number is unavailable.\n\nPass an empty string to clear the forwarding number.\n","parameters":[{"name":"id","in":"path","required":true,"description":"The phone number ID","schema":{"type":"integer"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"forwarding_number":{"type":"string","description":"The phone number to forward calls to when unavailable (pass empty string to clear)","nullable":true}}}}}},"responses":{"200":{"description":"Phone number updated successfully","content":{"application/json":{"schema":{"$ref":"#/components/schemas/PhoneNumber"}}}},"403":{"description":"Forbidden - Phone number doesn't belong to your organization","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}},"422":{"description":"Unprocessable entity - Invalid forwarding number","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"}}}}}}}}}
+```
