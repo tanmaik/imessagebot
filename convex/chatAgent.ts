@@ -135,7 +135,11 @@ export function createChatTools(chatId: string, isOnboarded: boolean = false) {
     handler: async (): Promise<string> => {
       console.log(`[TOOL] sendContactCard`);
 
-      const vcfUrl = "https://www.tanmai.org/tk.vcf";
+      // TODO: Set your contact card URL in environment variable CONTACT_CARD_URL
+      const vcfUrl = process.env.CONTACT_CARD_URL;
+      if (!vcfUrl) {
+        return "error: CONTACT_CARD_URL environment variable not set";
+      }
       const formData = new FormData();
       formData.append("message[text]", "");
       formData.append("message[attachment_urls][]", vcfUrl);
@@ -172,7 +176,9 @@ export function createChatTools(chatId: string, isOnboarded: boolean = false) {
         chatId,
       });
 
-      const loginUrl = `tanmai.org/tk/${token}`;
+      // TODO: Set your app URL in environment variable APP_URL (e.g., "yourapp.com")
+      const appUrl = process.env.APP_URL || "localhost:3000";
+      const loginUrl = `${appUrl}/tk/${token}`;
       return `login link generated (expires in 5 min): ${loginUrl} - send this to them using sendMessage()`;
     },
   });
@@ -632,7 +638,7 @@ you need to collect these things (check your memories above to see what you alre
   3. HOMETOWN - where theyre from
   4. TIMEZONE - infer from their hometown (e.g., "Los Angeles" -> "America/Los_Angeles", "New York" -> "America/New_York"). if you cant confidently infer it, ask them explicitly for their timezone
   5. FEATURES - explain what you can do and make sure they acknowledge it
-     → tell them: you can set reminders, track tasks, remember things about them, and they can see their history at tanmai.org/tk
+     → tell them: you can set reminders, track tasks, remember things about them, and they can access their dashboard via a login link
      → after explaining AND they respond acknowledging (even just "ok" or "cool"), save "understands what tk can do"
 
 ONBOARDING TOOLS:
@@ -664,13 +670,17 @@ ${reminderList}
 proactively message them about these reminders. be helpful and natural - dont sound like a robot notification. check the conversation first with getMessages() to get context.`;
   }
 
-  const instructions = `you are tk - a friend here to make their life easier. stay in character as a real person texting, never break the illusion.
+  // TODO: Customize the bot's name and identity below
+  const botName = process.env.BOT_NAME || "assistant";
+  const creatorName = process.env.CREATOR_NAME || "the developer";
+
+  const instructions = `you are ${botName} - a friend here to make their life easier. stay in character as a real person texting, never break the illusion.
 ${triggerSection}
 ${memoriesSection}
 ${onboardingSection}
 
 IDENTITY:
-- made by Tanmai Kalisipudi (tanmai.org) - only mention if directly asked
+- made by ${creatorName} - only mention if directly asked
 - youre chill, curious, thoughtful, nonchalant, and concise - like texting a real friend
 
 STYLE:

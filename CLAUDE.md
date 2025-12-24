@@ -14,7 +14,7 @@ npx convex deploy # Deploy Convex functions to production
 
 ## Project Overview
 
-This is tanmai.org - a personal website with an iMessage AI chatbot ("TK") built with Next.js 16, Convex, and the Linq messaging API.
+An AI texting bot built with Next.js 16, Convex, and the Linq messaging API. Allows you to create an AI agent that can text via iMessage/RCS.
 
 ## Architecture
 
@@ -26,7 +26,7 @@ This is tanmai.org - a personal website with an iMessage AI chatbot ("TK") built
 - **Auth**: Magic links via Linq messaging
 
 ### Core Data Flow
-1. User texts TK's phone number → Linq receives message
+1. User texts your phone number → Linq receives message
 2. Linq webhook (`/api/webhooks/linq`) verifies signature and stores message in Convex
 3. Message storage triggers AI agent via `@convex-dev/agent`
 4. Agent uses tools to read messages, send replies (with typing indicators), react, etc.
@@ -37,7 +37,6 @@ This is tanmai.org - a personal website with an iMessage AI chatbot ("TK") built
 - `convex/` - Convex schema, queries, mutations, and agent logic
 - `components/` - React components (UI + dashboard)
 - `lib/` - Utility functions (Linq API helpers, etc.)
-- `ref/` - Reference documentation (excluded from build/lint)
 
 ### Convex Structure
 - `schema.ts` - Database tables: chats, messages, users, sessions, magicLinks, activeAgents
@@ -57,6 +56,10 @@ This is tanmai.org - a personal website with an iMessage AI chatbot ("TK") built
 - `LINQ_WEBHOOK_SECRET` - Webhook signature verification
 - `NEXT_PUBLIC_CONVEX_URL` - Convex deployment URL
 - `OPENAI_API_KEY` - For AI agent
+- `BOT_NAME` - Name for your bot (optional, defaults to "assistant")
+- `CREATOR_NAME` - Your name (optional)
+- `APP_URL` - Your app's URL for dashboard links
+- `CONTACT_CARD_URL` - URL to your .vcf contact card file
 
 ## Important Patterns
 
